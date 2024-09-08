@@ -1,7 +1,8 @@
 
 
 CC:=g++
-FLAGS:=-Wall -Wextra -Wpedantic -std=c++11
+CSTD_FLAG:=-std=c++17
+FLAGS:=-Wall -Wextra -Wpedantic $(CSTD_FLAG)
 
 PROJ_DIR:=$(shell git rev-parse --show-toplevel)
 
@@ -16,6 +17,7 @@ FULL_INCLUDE_HEADERS:=$(wildcard $(INCLUDE_DIR)/gfx/*.h)
 
 SRC_DIR:=$(PROJ_DIR)/src
 SRC_SRCS:=vec.cpp
+
 FULL_SRC_SRCS:=$(addprefix $(SRC_DIR)/,$(SRC_SRCS))
 
 SRC_OBJS:=$(patsubst %.cpp,%.o,$(SRC_SRCS))
@@ -23,6 +25,7 @@ FULL_SRC_OBJS:=$(addprefix $(LIB_OUT_DIR)/,$(SRC_OBJS))
 
 TEST_DIR:=$(PROJ_DIR)/test
 TEST_SRCS:=main.cpp
+
 FULL_TEST_SRCS:=$(addprefix $(TEST_DIR)/,$(TEST_SRCS))
 FULL_TEST_HEADERS:=$(wildcard $(TEST_DIR)/*.h)
 
@@ -54,6 +57,7 @@ $(TEST_OUT_DIR)/test: $(FULL_TEST_OBJS) $(LIB_FILE)
 clangd:
 	echo "CompileFlags:" > temp.clangd
 	echo "  Add:" >> temp.clangd
+	echo "    - $(CSTD_FLAG)" >> temp.clangd
 	echo "    - -I$(INCLUDE_DIR)" >> temp.clangd
 	cp temp.clangd $(INCLUDE_DIR)/gfx/.clangd
 	cp temp.clangd $(SRC_DIR)/.clangd

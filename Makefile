@@ -16,7 +16,8 @@ INCLUDE_DIR:=$(PROJ_DIR)/include
 FULL_INCLUDE_HEADERS:=$(wildcard $(INCLUDE_DIR)/gfx/*.h)
 
 SRC_DIR:=$(PROJ_DIR)/src
-SRC_SRCS:=vec.cpp
+SRC_SRCS:=vec.cpp \
+		  img.cpp
 
 FULL_SRC_SRCS:=$(addprefix $(SRC_DIR)/,$(SRC_SRCS))
 
@@ -32,7 +33,7 @@ FULL_TEST_HEADERS:=$(wildcard $(TEST_DIR)/*.h)
 TEST_OBJS:=$(patsubst %.cpp,%.o,$(TEST_SRCS))
 FULL_TEST_OBJS:=$(addprefix $(TEST_OUT_DIR)/,$(TEST_OBJS))
 
-.PHONY: all lib test clangd clean
+.PHONY: all lib test run clangd clean
 
 all: lib test
 
@@ -53,6 +54,10 @@ $(TEST_OUT_DIR)/%.o: $(TEST_DIR)/%.cpp $(FULL_TEST_HEADERS) $(FULL_INCLUDE_HEADE
 test: $(TEST_OUT_DIR)/test
 $(TEST_OUT_DIR)/test: $(FULL_TEST_OBJS) $(LIB_FILE)
 	$(CC) $(FULL_TEST_OBJS) -L$(LIB_OUT_DIR) -lgfx -o $@
+
+# Temporary target.
+run: test
+	$(TEST_OUT_DIR)/test $(BUILD_DIR)/i.ppm
 
 clangd:
 	echo "CompileFlags:" > temp.clangd
